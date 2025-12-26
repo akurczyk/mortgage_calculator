@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symulator Spłat Kredytu Hipotecznego</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Symulator Spłat Kredytu Hipotecznego</h1>
+
+        <!-- Formularz parametrów początkowych -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Parametry kredytu</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="loanAmount" class="form-label">Kwota pozostała do spłaty (PLN)</label>
+                        <input type="number" class="form-control" id="loanAmount" value="300000" min="0" step="1000">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="interestRate" class="form-label">Oprocentowanie roczne (%)</label>
+                        <input type="number" class="form-control" id="interestRate" value="6.15" min="0" step="0.01">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="loanPeriod" class="form-label">Okres pozostały do spłaty (miesiące)</label>
+                        <input type="number" class="form-control" id="loanPeriod" value="240" min="1" step="1">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="installmentType" class="form-label">Typ rat</label>
+                        <select class="form-select" id="installmentType">
+                            <option value="equal">Raty równe (annuitetowe)</option>
+                            <option value="decreasing">Raty malejące</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="startDate" class="form-label">Data rozpoczęcia</label>
+                        <input type="month" class="form-control" id="startDate">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="inflationRate" class="form-label">Wskaźnik inflacji rocznej (%)</label>
+                        <input type="number" class="form-control" id="inflationRate" value="3.0" min="0" step="0.1">
+                        <div class="form-text">Używany do obliczenia wartości realnej rat</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sekcja wydarzeń -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Wydarzenia</h5>
+                <button class="btn btn-light btn-sm" id="addEventBtn">+ Dodaj wydarzenie</button>
+            </div>
+            <div class="card-body" id="eventsContainer">
+                <p class="text-muted" id="noEventsMsg">Brak wydarzeń. Kliknij "Dodaj wydarzenie" aby dodać zmianę oprocentowania lub nadpłatę.</p>
+            </div>
+        </div>
+
+        <!-- Przyciski akcji -->
+        <div class="text-center mb-4">
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" id="saveBtn" title="Zapisz obecne parametry i wydarzenia">💾 Zapisz</button>
+                <button class="btn btn-info" id="loadBtn" title="Wczytaj zapisane parametry i wydarzenia">📂 Wczytaj</button>
+                <button class="btn btn-warning" id="clearBtn" title="Wyczyść obecne ustawienia (nie usuwa zapisanych symulacji)">🗑️ Wyczyść</button>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary btn-lg" id="calculateBtn">Oblicz harmonogram spłat</button>
+            </div>
+        </div>
+
+        <!-- Podsumowanie -->
+        <div id="summarySection" class="card mb-4" style="display: none;">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Podsumowanie</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Suma rat:</strong></p>
+                        <p class="h5 text-primary" id="totalAmount">0 PLN</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Suma odsetek:</strong></p>
+                        <p class="h5 text-danger" id="totalInterest">0 PLN</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Suma kapitału:</strong></p>
+                        <p class="h5 text-success" id="totalPrincipal">0 PLN</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Liczba rat:</strong></p>
+                        <p class="h5" id="installmentCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela wyników -->
+        <div id="resultsSection" style="display: none;">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Harmonogram spłat</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0" id="resultsTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nr raty</th>
+                                    <th>Data</th>
+                                    <th>Rata (PLN)</th>
+                                    <th>Rata realna (PLN)</th>
+                                    <th>Kapitał (PLN)</th>
+                                    <th>Odsetki (PLN)</th>
+                                    <th>Pozostały kapitał (PLN)</th>
+                                    <th>Wydarzenia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal dla dodawania wydarzenia -->
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dodaj wydarzenie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="eventType" class="form-label">Typ wydarzenia</label>
+                        <select class="form-select" id="eventType">
+                            <option value="rateChange">Zmiana oprocentowania</option>
+                            <option value="overpayment">Nadpłata</option>
+                            <option value="loanHoliday">Urlop kredytowy</option>
+                            <option value="periodChange">Zmiana liczby rat</option>
+                            <option value="inflationChange">Zmiana wskaźnika inflacji</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventMonth" class="form-label">Miesiąc (numer raty)</label>
+                        <input type="number" class="form-control" id="eventMonth" min="1" value="1">
+                    </div>
+                    <div class="mb-3" id="newRateGroup">
+                        <label for="newRate" class="form-label">Nowe oprocentowanie roczne (%)</label>
+                        <input type="number" class="form-control" id="newRate" step="0.01" value="6.0">
+                    </div>
+                    <div class="mb-3" id="overpaymentGroup" style="display: none;">
+                        <label for="overpaymentAmount" class="form-label">Kwota nadpłaty (PLN)</label>
+                        <input type="number" class="form-control" id="overpaymentAmount" step="100" value="10000">
+
+                        <label for="overpaymentStrategy" class="form-label mt-3">Wpływ nadpłaty na kredyt</label>
+                        <select class="form-select" id="overpaymentStrategy">
+                            <option value="shortenPeriod">Skrócenie okresu kredytowania</option>
+                            <option value="lowerInstallment">Zmniejszenie wysokości raty</option>
+                        </select>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="isRecurring">
+                            <label class="form-check-label" for="isRecurring">
+                                Nadpłata cykliczna
+                            </label>
+                        </div>
+
+                        <div id="recurringOptions" style="display: none;">
+                            <label for="recurringFrequency" class="form-label mt-2">Częstotliwość (co ile miesięcy)</label>
+                            <input type="number" class="form-control" id="recurringFrequency" min="1" value="12">
+
+                            <label for="recurringCount" class="form-label mt-2">Liczba powtórzeń</label>
+                            <input type="number" class="form-control" id="recurringCount" min="1" value="5">
+                            <div class="form-text">Ile razy ma się powtórzyć nadpłata</div>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="loanHolidayGroup" style="display: none;">
+                        <label for="holidayDuration" class="form-label">Liczba miesięcy urlopu</label>
+                        <input type="number" class="form-control" id="holidayDuration" min="1" max="12" value="3">
+                        <div class="form-text">Przez ten okres nie będą naliczane raty kapitałowe (tylko odsetki)</div>
+                    </div>
+                    <div class="mb-3" id="periodChangeGroup" style="display: none;">
+                        <label for="newPeriod" class="form-label">Nowa liczba pozostałych rat</label>
+                        <input type="number" class="form-control" id="newPeriod" min="1" value="120">
+                        <div class="form-text">Pozostały kapitał zostanie rozłożony na nową liczbę rat</div>
+                    </div>
+                    <div class="mb-3" id="inflationChangeGroup" style="display: none;">
+                        <label for="newInflation" class="form-label">Nowy wskaźnik inflacji rocznej (%)</label>
+                        <input type="number" class="form-control" id="newInflation" step="0.1" value="3.0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="button" class="btn btn-primary" id="saveEventBtn">Dodaj</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal zapisywania symulacji -->
+    <div class="modal fade" id="saveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Zapisz symulację</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="simulationName" class="form-label">Nazwa symulacji</label>
+                        <input type="text" class="form-control" id="simulationName" placeholder="np. Kredyt z nadpłatami">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="button" class="btn btn-success" id="confirmSaveBtn">Zapisz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal wczytywania symulacji -->
+    <div class="modal fade" id="loadModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Wczytaj symulację</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="simulationsList"></div>
+                    <p class="text-muted text-center" id="noSimulationsMsg" style="display: none;">Brak zapisanych symulacji</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 8px;
+}
+
+.card-header {
+    border-radius: 8px 8px 0 0 !important;
+    font-weight: 500;
+}
+
+.event-item {
+    background-color: #f8f9fa;
+    border-left: 4px solid #28a745;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.event-item:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.event-item.rate-change {
+    border-left-color: #ffc107;
+}
+
+.event-item.overpayment {
+    border-left-color: #28a745;
+}
+
+.event-item.loan-holiday {
+    border-left-color: #17a2b8;
+}
+
+.event-item.period-change {
+    border-left-color: #007bff;
+}
+
+.event-item.inflation-change {
+    border-left-color: #6c757d;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.event-info {
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.btn-remove-event {
+    padding: 4px 12px;
+    font-size: 0.85rem;
+}
+
+#resultsTable {
+    font-size: 0.9rem;
+}
+
+#resultsTable tbody tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+.event-highlight {
+    background-color: #fff3cd !important;
+    font-weight: 500;
+}
+
+.text-number {
+    font-family: 'Courier New', monospace;
+    text-align: right;
+}
+
+/* Lista symulacji */
+.simulation-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.simulation-card:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.simulation-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.simulation-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.simulation-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.simulation-info {
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.btn-delete-simulation {
+    margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #resultsTable {
+        font-size: 0.75rem;
+    }
+
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        margin-bottom: 5px;
+    }
+}
+
+/* Animacje */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
