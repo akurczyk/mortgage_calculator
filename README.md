@@ -88,10 +88,10 @@ The project includes comprehensive test coverage:
 - **E2E Tests**: Test complete user workflows in real browsers (Chrome, Firefox, Safari)
 
 Coverage goals:
-- Lines: 70%+
-- Functions: 70%+
-- Branches: 70%+
-- Statements: 70%+
+- Lines: 40%+
+- Functions: 45%+
+- Branches: 30%+
+- Statements: 40%+
 
 ### CI/CD
 

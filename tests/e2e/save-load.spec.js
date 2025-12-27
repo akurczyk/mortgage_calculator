@@ -75,6 +75,7 @@ test.describe('Save and Load Simulations', () => {
     await page.fill('#eventMonth', '12');
     await page.fill('#newRate', '6.5');
     await page.click('#saveEventBtn');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     // Save simulation
     await page.click('#saveBtn');
@@ -83,6 +84,7 @@ test.describe('Save and Load Simulations', () => {
     // Handle the save confirmation dialog
     page.once('dialog', dialog => dialog.accept());
     await page.click('#confirmSaveBtn');
+    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
 
     // Wait a bit for the save to complete
     await page.waitForTimeout(500);

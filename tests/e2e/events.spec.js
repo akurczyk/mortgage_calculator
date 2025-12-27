@@ -127,6 +127,7 @@ test.describe('Events Management', () => {
     await page.fill('#eventMonth', '12');
     await page.fill('#newRate', '7');
     await page.click('#saveEventBtn');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     // Verify event is in table
     let eventRows = page.locator('#eventsTable tbody tr:not(#noEventsRow)');
@@ -193,16 +194,19 @@ test.describe('Events Management', () => {
     await page.fill('#eventMonth', '18');
     await page.fill('#newRate', '7');
     await page.click('#saveEventBtn');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     await page.click('#addEventBtn');
     await page.fill('#eventMonth', '6');
     await page.fill('#newRate', '6.5');
     await page.click('#saveEventBtn');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     await page.click('#addEventBtn');
     await page.fill('#eventMonth', '12');
     await page.fill('#newRate', '7.5');
     await page.click('#saveEventBtn');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     // Check that events are sorted by month (6, 12, 18)
     const firstMonth = await page.locator('#eventsTable tbody tr:nth-child(1) td:first-child').textContent();

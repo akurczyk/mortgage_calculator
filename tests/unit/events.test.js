@@ -73,7 +73,8 @@ describe('Event Handling in Calculations', () => {
 
       // Check that overpayment is recorded
       expect(schedule[2].overpayment).toBe(10000);
-      expect(schedule[2].events).toContain('Overpayment 10 000.00 PLN');
+      expect(schedule[2].events[0]).toContain('Overpayment 10 000.00 PLN');
+      expect(schedule[2].events[0]).toContain('Shorten period');
 
       // Schedule should be shorter than original 12 months
       expect(schedule.length).toBeLessThan(12);

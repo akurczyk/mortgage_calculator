@@ -103,10 +103,12 @@ test.describe('UI Interactions', () => {
     await page.click('#saveBtn');
     await expect(page.locator('#saveModal')).toBeVisible();
     await page.keyboard.press('Escape'); // Close modal
+    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
 
     await page.click('#loadBtn');
     await expect(page.locator('#loadModal')).toBeVisible();
     await page.keyboard.press('Escape'); // Close modal
+    await page.waitForSelector('#loadModal', { state: 'hidden', timeout: 5000 });
   });
 
   test('event modal form switches based on event type', async ({ page }) => {
@@ -169,6 +171,7 @@ test.describe('UI Interactions', () => {
 
     // Press Escape
     await page.keyboard.press('Escape');
+    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
 
     // Modal should close
     await expect(page.locator('#eventModal')).toBeHidden();
@@ -179,6 +182,7 @@ test.describe('UI Interactions', () => {
 
     // Press Escape
     await page.keyboard.press('Escape');
+    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
 
     // Modal should close
     await expect(page.locator('#saveModal')).toBeHidden();
