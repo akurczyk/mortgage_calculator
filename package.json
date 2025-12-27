@@ -19,7 +19,7 @@
     "loan",
     "finance"
   ],
-  "author": "",
+  "author": "Aleksander Kurczyk",
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.40.0",

@@ -127,7 +127,7 @@ This project is available under the MIT License.
 
 ## Author
 
-Project created using [Claude Code](https://claude.com/claude-code) - AI programming tool from Anthropic.
+Created by **Aleksander Kurczyk** using [Claude Code](https://claude.com/claude-code) - AI programming tool from Anthropic.
 
 ---
 
