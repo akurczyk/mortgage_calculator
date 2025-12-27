@@ -12,17 +12,24 @@
 <body>
     <div class="container-fluid py-4">
         <div class="container">
-            <h1 class="text-center mb-4">Kalkulator Kredytu Hipotecznego</h1>
+            <!-- Przyciski zmiany języka -->
+            <div class="text-end mb-2">
+                <button class="btn btn-sm btn-outline-primary" id="langPL" onclick="changeLanguage('pl')">PL</button>
+                <button class="btn btn-sm btn-outline-primary" id="langEN" onclick="changeLanguage('en')">EN</button>
+            </div>
+
+            <h1 class="text-center" data-i18n="title">Kalkulator Kredytu Hipotecznego</h1>
+            <p class="text-center text-muted description mb-4" style="font-size: 0.9rem;" data-i18n="calculatorDescription">Kalkulator pozwala obliczyć wysokości rat z uwzględnieniem nadpłat i nadpłat cyklicznych, zmian oprocentowania (WIBOR) w zadanym czasie oraz podaje realną wartość raty (uwzględniając inflację). Ponadto możliwe jest zapisanie parametrów i zdarzeń w pamięci przeglądarki.</p>
 
             <!-- Przyciski akcji - górne -->
             <div class="action-buttons-top mb-3">
-                <button class="btn btn-secondary btn-sm" id="saveBtn" title="Zapisz obecne parametry i wydarzenia">
+                <button class="btn btn-secondary btn-sm" id="saveBtn" data-i18n="btnSave" data-i18n-title="btnSaveTitle">
                     Zapisz
                 </button>
-                <button class="btn btn-secondary btn-sm" id="loadBtn" title="Wczytaj zapisane parametry i wydarzenia">
+                <button class="btn btn-secondary btn-sm" id="loadBtn" data-i18n="btnLoad" data-i18n-title="btnLoadTitle">
                     Wczytaj
                 </button>
-                <button class="btn btn-danger btn-sm" id="clearBtn" title="Wyczyść obecne ustawienia">
+                <button class="btn btn-danger btn-sm" id="clearBtn" data-i18n="btnClear" data-i18n-title="btnClearTitle">
                     Wyczyść
                 </button>
             </div>
@@ -33,35 +40,35 @@
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header">
-                            <h5 class="mb-0">Parametry kredytu</h5>
+                            <h5 class="mb-0" data-i18n="loanParams">Parametry kredytu</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="loanAmount" class="form-label">Kwota pozostała (PLN)</label>
+                                    <label for="loanAmount" class="form-label" data-i18n="loanAmount">Kwota pozostała (PLN)</label>
                                     <input type="number" class="form-control" id="loanAmount" value="300000" min="0" step="1000">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="interestRate" class="form-label">Oprocentowanie (%)</label>
+                                    <label for="interestRate" class="form-label" data-i18n="interestRate">Oprocentowanie (%)</label>
                                     <input type="number" class="form-control" id="interestRate" value="6.15" min="0" step="0.01">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="loanPeriod" class="form-label">Okres (miesiące)</label>
+                                    <label for="loanPeriod" class="form-label" data-i18n="loanPeriod">Okres (miesiące)</label>
                                     <input type="number" class="form-control" id="loanPeriod" value="240" min="1" step="1">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="installmentType" class="form-label">Typ rat</label>
+                                    <label for="installmentType" class="form-label" data-i18n="installmentType">Typ rat</label>
                                     <select class="form-select" id="installmentType">
-                                        <option value="equal">Raty równe</option>
-                                        <option value="decreasing">Raty malejące</option>
+                                        <option value="equal" data-i18n="equalInstallments">Raty równe</option>
+                                        <option value="decreasing" data-i18n="decreasingInstallments">Raty malejące</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="startDate" class="form-label">Data rozpoczęcia</label>
+                                    <label for="startDate" class="form-label" data-i18n="startDate">Data rozpoczęcia</label>
                                     <input type="month" class="form-control" id="startDate">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="inflationRate" class="form-label">Inflacja (%)</label>
+                                    <label for="inflationRate" class="form-label" data-i18n="inflationRate">Inflacja (%)</label>
                                     <input type="number" class="form-control" id="inflationRate" value="3.0" min="0" step="0.1">
                                 </div>
                             </div>
@@ -73,8 +80,8 @@
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header">
-                            <h5 class="mb-0">Zdarzenia</h5>
-                            <button class="btn btn-sm btn-light" id="addEventBtn">
+                            <h5 class="mb-0" data-i18n="events">Zdarzenia</h5>
+                            <button class="btn btn-sm btn-light" id="addEventBtn" data-i18n="btnAdd">
                                 Dodaj
                             </button>
                         </div>
@@ -83,15 +90,15 @@
                                 <table class="table table-hover mb-0" id="eventsTable">
                                     <thead>
                                         <tr>
-                                            <th>Nr raty</th>
-                                            <th>Typ</th>
-                                            <th>Opis</th>
-                                            <th style="width: 80px;">Akcja</th>
+                                            <th data-i18n="installmentNo">Nr raty</th>
+                                            <th data-i18n="type">Typ</th>
+                                            <th data-i18n="description">Opis</th>
+                                            <th style="width: 80px;" data-i18n="action">Akcja</th>
                                         </tr>
                                     </thead>
                                     <tbody id="eventsTableBody">
                                         <tr id="noEventsRow">
-                                            <td colspan="4" class="text-center text-muted">Brak zdarzeń</td>
+                                            <td colspan="4" class="text-center text-muted" data-i18n="noEvents">Brak zdarzeń</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -103,7 +110,7 @@
 
             <!-- Przycisk obliczania - dolny -->
             <div class="action-buttons-bottom mb-4">
-                <button class="btn btn-primary btn-lg" id="calculateBtn">
+                <button class="btn btn-primary btn-lg" id="calculateBtn" data-i18n="btnCalculate">
                     Oblicz harmonogram spłat
                 </button>
             </div>
@@ -111,31 +118,31 @@
             <!-- Podsumowanie -->
             <div id="summarySection" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h5 class="mb-0">Podsumowanie</h5>
+                    <h5 class="mb-0" data-i18n="summary">Podsumowanie</h5>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3 col-6">
                             <div class="summary-item">
-                                <div class="summary-label">Suma rat</div>
+                                <div class="summary-label" data-i18n="totalInstallments">Suma rat</div>
                                 <div class="summary-value text-primary" id="totalAmount">0 PLN</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="summary-item">
-                                <div class="summary-label">Suma odsetek</div>
+                                <div class="summary-label" data-i18n="totalInterest">Suma odsetek</div>
                                 <div class="summary-value text-danger" id="totalInterest">0 PLN</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="summary-item">
-                                <div class="summary-label">Suma kapitału</div>
+                                <div class="summary-label" data-i18n="totalPrincipal">Suma kapitału</div>
                                 <div class="summary-value text-success" id="totalPrincipal">0 PLN</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="summary-item">
-                                <div class="summary-label">Liczba rat</div>
+                                <div class="summary-label" data-i18n="installmentCount">Liczba rat</div>
                                 <div class="summary-value" id="installmentCount">0</div>
                             </div>
                         </div>
@@ -147,21 +154,21 @@
             <div id="resultsSection" style="display: none;">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Harmonogram spłat</h5>
+                        <h5 class="mb-0" data-i18n="paymentSchedule">Harmonogram spłat</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0" id="resultsTable">
                                 <thead>
                                     <tr>
-                                        <th>Nr</th>
-                                        <th>Data</th>
-                                        <th class="bg-payment text-end">Rata</th>
-                                        <th class="text-primary bg-payment text-end">Realna rata*</th>
-                                        <th class="bg-principal text-end">Kapitał</th>
-                                        <th class="bg-interest text-end">Odsetki</th>
-                                        <th class="text-end">Pozostały kapitał</th>
-                                        <th>Zdarzenie</th>
+                                        <th data-i18n="no">Nr</th>
+                                        <th data-i18n="date">Data</th>
+                                        <th class="bg-payment text-end" data-i18n="installment">Rata</th>
+                                        <th class="text-primary bg-payment text-end" data-i18n="realInstallment">Realna rata*</th>
+                                        <th class="bg-principal text-end" data-i18n="principal">Kapitał</th>
+                                        <th class="bg-interest text-end" data-i18n="interest">Odsetki</th>
+                                        <th class="text-end" data-i18n="remainingPrincipal">Pozostały kapitał</th>
+                                        <th data-i18n="event">Zdarzenie</th>
                                     </tr>
                                 </thead>
                                 <tbody id="resultsTableBody"></tbody>
@@ -169,7 +176,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-2 text-muted" style="font-size: 0.85rem;">
+                <div class="mt-2 text-muted" style="font-size: 0.85rem;" data-i18n="realInstallmentNote">
                     * Realna rata - wartość raty skorygowana o inflację, pokazująca rzeczywistą wartość pieniądza w czasie
                 </div>
             </div>
@@ -181,63 +188,63 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Dodaj wydarzenie</h5>
+                    <h5 class="modal-title" data-i18n="addEvent">Dodaj wydarzenie</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="eventType" class="form-label">Typ wydarzenia</label>
+                        <label for="eventType" class="form-label" data-i18n="eventType">Typ wydarzenia</label>
                         <select class="form-select" id="eventType">
-                            <option value="rateChange">Zmiana oprocentowania</option>
-                            <option value="overpayment">Nadpłata</option>
-                            <option value="loanHoliday">Urlop kredytowy</option>
-                            <option value="periodChange">Zmiana liczby rat</option>
-                            <option value="inflationChange">Zmiana inflacji</option>
+                            <option value="rateChange" data-i18n="eventRateChange">Zmiana oprocentowania</option>
+                            <option value="overpayment" data-i18n="eventOverpayment">Nadpłata</option>
+                            <option value="loanHoliday" data-i18n="eventLoanHoliday">Urlop kredytowy</option>
+                            <option value="periodChange" data-i18n="eventPeriodChange">Zmiana liczby rat</option>
+                            <option value="inflationChange" data-i18n="eventInflationChange">Zmiana inflacji</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="eventMonth" class="form-label">Miesiąc (numer raty)</label>
+                        <label for="eventMonth" class="form-label" data-i18n="eventMonth">Miesiąc (numer raty)</label>
                         <input type="number" class="form-control" id="eventMonth" min="1" value="1">
                     </div>
                     <div class="mb-3" id="newRateGroup">
-                        <label for="newRate" class="form-label">Nowe oprocentowanie (%)</label>
+                        <label for="newRate" class="form-label" data-i18n="newRate">Nowe oprocentowanie (%)</label>
                         <input type="number" class="form-control" id="newRate" step="0.01" value="6.0">
                     </div>
                     <div class="mb-3" id="overpaymentGroup" style="display: none;">
-                        <label for="overpaymentAmount" class="form-label">Kwota nadpłaty (PLN)</label>
+                        <label for="overpaymentAmount" class="form-label" data-i18n="overpaymentAmount">Kwota nadpłaty (PLN)</label>
                         <input type="number" class="form-control" id="overpaymentAmount" step="100" value="10000">
-                        <label for="overpaymentStrategy" class="form-label mt-3">Wpływ nadpłaty</label>
+                        <label for="overpaymentStrategy" class="form-label mt-3" data-i18n="overpaymentImpact">Wpływ nadpłaty</label>
                         <select class="form-select" id="overpaymentStrategy">
-                            <option value="shortenPeriod">Skrócenie okresu</option>
-                            <option value="lowerInstallment">Zmniejszenie raty</option>
+                            <option value="shortenPeriod" data-i18n="shortenPeriod">Skrócenie okresu</option>
+                            <option value="lowerInstallment" data-i18n="lowerInstallment">Zmniejszenie raty</option>
                         </select>
                         <div class="form-check mt-3">
                             <input class="form-check-input" type="checkbox" id="isRecurring">
-                            <label class="form-check-label" for="isRecurring">Nadpłata cykliczna</label>
+                            <label class="form-check-label" for="isRecurring" data-i18n="recurringOverpayment">Nadpłata cykliczna</label>
                         </div>
                         <div id="recurringOptions" style="display: none;">
-                            <label for="recurringFrequency" class="form-label mt-2">Częstotliwość (miesiące)</label>
+                            <label for="recurringFrequency" class="form-label mt-2" data-i18n="frequency">Częstotliwość (miesiące)</label>
                             <input type="number" class="form-control" id="recurringFrequency" min="1" value="12">
-                            <label for="recurringCount" class="form-label mt-2">Liczba powtórzeń</label>
+                            <label for="recurringCount" class="form-label mt-2" data-i18n="repeatCount">Liczba powtórzeń</label>
                             <input type="number" class="form-control" id="recurringCount" min="1" value="5">
                         </div>
                     </div>
                     <div class="mb-3" id="loanHolidayGroup" style="display: none;">
-                        <label for="holidayDuration" class="form-label">Liczba miesięcy</label>
+                        <label for="holidayDuration" class="form-label" data-i18n="monthsCount">Liczba miesięcy</label>
                         <input type="number" class="form-control" id="holidayDuration" min="1" max="12" value="3">
                     </div>
                     <div class="mb-3" id="periodChangeGroup" style="display: none;">
-                        <label for="newPeriod" class="form-label">Nowa liczba rat</label>
+                        <label for="newPeriod" class="form-label" data-i18n="newInstallmentsCount">Nowa liczba rat</label>
                         <input type="number" class="form-control" id="newPeriod" min="1" value="120">
                     </div>
                     <div class="mb-3" id="inflationChangeGroup" style="display: none;">
-                        <label for="newInflation" class="form-label">Nowa inflacja (%)</label>
+                        <label for="newInflation" class="form-label" data-i18n="newInflation">Nowa inflacja (%)</label>
                         <input type="number" class="form-control" id="newInflation" step="0.1" value="3.0">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <button type="button" class="btn btn-primary" id="saveEventBtn">Dodaj</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btnCancel">Anuluj</button>
+                    <button type="button" class="btn btn-primary" id="saveEventBtn" data-i18n="btnAdd">Dodaj</button>
                 </div>
             </div>
         </div>
@@ -248,18 +255,18 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Zapisz symulację</h5>
+                    <h5 class="modal-title" data-i18n="saveSimulation">Zapisz symulację</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="simulationName" class="form-label">Nazwa symulacji</label>
-                        <input type="text" class="form-control" id="simulationName" placeholder="np. Kredyt z nadpłatami">
+                        <label for="simulationName" class="form-label" data-i18n="simulationName">Nazwa symulacji</label>
+                        <input type="text" class="form-control" id="simulationName" data-i18n-placeholder="simulationPlaceholder">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <button type="button" class="btn btn-success" id="confirmSaveBtn">Zapisz</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btnCancel">Anuluj</button>
+                    <button type="button" class="btn btn-success" id="confirmSaveBtn" data-i18n="btnSave">Zapisz</button>
                 </div>
             </div>
         </div>
@@ -270,15 +277,15 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Wczytaj symulację</h5>
+                    <h5 class="modal-title" data-i18n="loadSimulation">Wczytaj symulację</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div id="simulationsList"></div>
-                    <p class="text-muted text-center" id="noSimulationsMsg" style="display: none;">Brak zapisanych symulacji</p>
+                    <p class="text-muted text-center" id="noSimulationsMsg" style="display: none;" data-i18n="noSavedSimulations">Brak zapisanych symulacji</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btnClose">Zamknij</button>
                 </div>
             </div>
         </div>
