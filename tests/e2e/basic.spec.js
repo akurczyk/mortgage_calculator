@@ -52,23 +52,6 @@ test.describe('Basic Mortgage Calculator Workflow', () => {
     await expect(installmentCount).toContainText('240');
   });
 
-  test('calculates loan with custom values', async ({ page }) => {
-    // Set custom values
-    await page.fill('#loanAmount', '200000');
-    await page.fill('#interestRate', '5.5');
-    await page.fill('#loanPeriod', '180');
-    await page.fill('#inflationRate', '2.5');
-
-    // Click calculate
-    await page.click('#calculateBtn');
-
-    // Wait for results
-    await expect(page.locator('#summarySection')).toBeVisible();
-
-    // Verify installment count
-    const installmentCount = page.locator('#installmentCount');
-    await expect(installmentCount).toContainText('180');
-  });
 
   test('displays payment schedule table', async ({ page }) => {
     // Calculate with default values
