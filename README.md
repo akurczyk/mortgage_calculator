@@ -4,7 +4,7 @@
 
 A simple yet advanced mortgage calculator created for fun with [Claude Code](https://claude.com/claude-code).
 
-**🌐 Live Demo:** [http://hipoteka.kurczyk.xyz](http://hipoteka.kurczyk.xyz)
+**🌐 Live Demo:** [https://hipoteka.kurczyk.xyz](https://hipoteka.kurczyk.xyz)
 
 **📌 Note:** Originally designed for Polish mortgages, but should work with any mortgage type.
 
