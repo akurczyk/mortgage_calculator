@@ -189,65 +189,63 @@ function saveEvent() {
 
 // Renderuj listę wydarzeń
 function renderEvents() {
-    const container = document.getElementById('eventsContainer');
+    const tbody = document.getElementById('eventsTableBody');
+    const noEventsRow = document.getElementById('noEventsRow');
+
+    // Usuń wszystkie wiersze oprócz noEventsRow
+    const rows = tbody.querySelectorAll('tr:not(#noEventsRow)');
+    rows.forEach(row => row.remove());
 
     if (events.length === 0) {
-        container.innerHTML = '<p class="text-muted" id="noEventsMsg">Brak wydarzeń. Kliknij "Dodaj wydarzenie" aby dodać zmianę oprocentowania lub nadpłatę.</p>';
+        if (noEventsRow) {
+            noEventsRow.style.display = 'table-row';
+        }
         return;
+    }
+
+    if (noEventsRow) {
+        noEventsRow.style.display = 'none';
     }
 
     let html = '';
     events.forEach(event => {
-        let typeClass = 'overpayment';
         let typeName = '';
-        let typeColor = 'success';
         let details = '';
 
         if (event.type === 'rateChange') {
-            typeClass = 'rate-change';
             typeName = 'Zmiana oprocentowania';
-            typeColor = 'warning';
             details = `Nowe oprocentowanie: ${event.newRate}%`;
         } else if (event.type === 'overpayment') {
-            typeClass = 'overpayment';
             typeName = event.isRecurring ? `Nadpłata cykliczna (${event.recurringIndex}/${event.recurringTotal})` : 'Nadpłata';
-            typeColor = 'success';
             const strategyText = event.strategy === 'shortenPeriod' ? 'Skrócenie okresu' : 'Zmniejszenie raty';
-            details = `Kwota: ${formatNumber(event.amount)} PLN | ${strategyText}`;
+            details = `${formatNumber(event.amount)} PLN, ${strategyText}`;
         } else if (event.type === 'loanHoliday') {
-            typeClass = 'loan-holiday';
             typeName = 'Urlop kredytowy';
-            typeColor = 'info';
-            details = `Czas trwania: ${event.duration} mies.`;
+            details = `${event.duration} mies.`;
         } else if (event.type === 'periodChange') {
-            typeClass = 'period-change';
             typeName = 'Zmiana liczby rat';
-            typeColor = 'primary';
             details = `Nowa liczba rat: ${event.newPeriod}`;
         } else if (event.type === 'inflationChange') {
-            typeClass = 'inflation-change';
             typeName = 'Zmiana inflacji';
-            typeColor = 'secondary';
             details = `Nowa inflacja: ${event.newInflation}%`;
         }
 
         html += `
-            <div class="event-item ${typeClass} fade-in">
-                <div class="event-details">
-                    <div class="event-badge">
-                        <span class="badge bg-${typeColor}">${typeName}</span>
-                        <span class="text-muted">Rata nr ${event.month}</span>
-                    </div>
-                    <div class="event-info">${details}</div>
-                </div>
-                <button class="btn btn-sm btn-danger btn-remove-event" onclick="removeEvent(${event.id})">
-                    Usuń
-                </button>
-            </div>
+            <tr>
+                <td>${event.month}</td>
+                <td><span class="event-type-badge">${typeName}</span></td>
+                <td>${details}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="removeEvent(${event.id})">
+                        Usuń
+                    </button>
+                </td>
+            </tr>
         `;
     });
 
-    container.innerHTML = html;
+    // Dodaj nowe wiersze
+    tbody.insertAdjacentHTML('beforeend', html);
 }
 
 // Usuń wydarzenie
@@ -624,7 +622,20 @@ function displayResults(schedule) {
     document.getElementById('totalAmount').textContent = formatNumber(totalPayment) + ' PLN';
     document.getElementById('totalInterest').textContent = formatNumber(totalInterest) + ' PLN';
     document.getElementById('totalPrincipal').textContent = formatNumber(totalPrincipal) + ' PLN';
-    document.getElementById('installmentCount').textContent = schedule.length;
+
+    // Liczba rat z latami i miesiącami
+    const totalMonths = schedule.length;
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+    let installmentText = totalMonths.toString();
+    if (years > 0) {
+        installmentText += ` (${years} ${years === 1 ? 'rok' : years < 5 ? 'lata' : 'lat'}`;
+        if (months > 0) {
+            installmentText += ` ${months} mies.`;
+        }
+        installmentText += ')';
+    }
+    document.getElementById('installmentCount').textContent = installmentText;
 
     // Tabela
     const tbody = document.getElementById('resultsTableBody');
@@ -636,13 +647,25 @@ function displayResults(schedule) {
             tr.classList.add('event-highlight');
         }
 
+        // Oblicz lata i miesiące dla numeru raty
+        const rowYears = Math.floor(row.month / 12);
+        const rowMonths = row.month % 12;
+        let monthText = row.month.toString();
+        if (rowYears > 0) {
+            monthText += ` <small style="color: #6c757d;">(${rowYears}r`;
+            if (rowMonths > 0) {
+                monthText += ` ${rowMonths}m`;
+            }
+            monthText += ')</small>';
+        }
+
         tr.innerHTML = `
-            <td>${row.month}</td>
+            <td>${monthText}</td>
             <td>${row.date}</td>
-            <td class="text-end">${formatNumber(row.payment + row.overpayment)}</td>
-            <td class="text-end text-info">${formatNumber(row.realPayment)}</td>
-            <td class="text-end text-success">${formatNumber(row.principal + row.overpayment)}</td>
-            <td class="text-end text-danger">${formatNumber(row.interest)}</td>
+            <td class="bg-payment text-end">${formatNumber(row.payment + row.overpayment)}</td>
+            <td class="text-primary bg-payment text-end">${formatNumber(row.realPayment)}</td>
+            <td class="bg-principal text-end">${formatNumber(row.principal + row.overpayment)}</td>
+            <td class="bg-interest text-end">${formatNumber(row.interest)}</td>
             <td class="text-end">${formatNumber(row.balance)}</td>
             <td>${row.events.length > 0 ? row.events.join(', ') : '-'}</td>
         `;
