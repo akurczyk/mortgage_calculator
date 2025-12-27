@@ -7,9 +7,9 @@ const translations = {
         title: 'Kalkulator Kredytu Hipotecznego',
         calculatorDescription: 'Kalkulator pozwala obliczyć wysokości rat z uwzględnieniem nadpłat i nadpłat cyklicznych, zmian oprocentowania (WIBOR) w zadanym czasie oraz podaje realną wartość raty (uwzględniając inflację). Ponadto możliwe jest zapisanie parametrów i zdarzeń w pamięci przeglądarki. <a href="https://github.com/akurczyk/mortgage_calculator" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); text-decoration: underline;">Projekt na GitHub</a>.',
         btnSave: 'Zapisz',
-        btnSaveTitle: 'Zapisz obecne parametry i wydarzenia',
+        btnSaveTitle: 'Zapisz obecne parametry i zdarzenia',
         btnLoad: 'Wczytaj',
-        btnLoadTitle: 'Wczytaj zapisane parametry i wydarzenia',
+        btnLoadTitle: 'Wczytaj zapisane parametry i zdarzenia',
         btnClear: 'Wyczyść',
         btnClearTitle: 'Wyczyść obecne ustawienia',
         loanParams: 'Parametry kredytu',
@@ -44,8 +44,8 @@ const translations = {
         remainingPrincipal: 'Pozostały kapitał',
         event: 'Zdarzenie',
         realInstallmentNote: '* Realna rata - wartość raty skorygowana o inflację, pokazująca rzeczywistą wartość pieniądza w czasie',
-        addEvent: 'Dodaj wydarzenie',
-        eventType: 'Typ wydarzenia',
+        addEvent: 'Dodaj zdarzenie',
+        eventType: 'Typ zdarzenia',
         eventRateChange: 'Zmiana oprocentowania',
         eventOverpayment: 'Nadpłata',
         eventLoanHoliday: 'Urlop kredytowy',
@@ -685,31 +685,47 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             totalPayment = principalPayment + interestPayment;
         }
 
-        // Handle overpayments
-        let overpayment = 0;
-        let overpaymentStrategy = 'shortenPeriod'; // Default strategy
-        let plannedOverpayment = 0;
-        monthEvents.forEach(event => {
-            if (event.type === 'overpayment') {
-                plannedOverpayment += event.amount;
-                overpaymentStrategy = event.strategy; // Get strategy from event
+        // Handle overpayments - process each event separately
+        let totalOverpayment = 0;
+        let currentRemainingPrincipal = remainingPrincipal - principalPayment;
+
+        const overpaymentEvents = monthEvents.filter(e => e.type === 'overpayment');
+        overpaymentEvents.forEach(event => {
+            // Limit overpayment to remaining principal
+            const overpayment = Math.min(event.amount, Math.max(0, currentRemainingPrincipal));
+
+            if (overpayment > 0) {
+                currentRemainingPrincipal -= overpayment;
+                totalOverpayment += overpayment;
+
+                // Apply strategy for this specific overpayment
+                if (event.strategy === 'shortenPeriod') {
+                    // Recalculate remaining months based on reduced principal
+                    if (currentRemainingPrincipal > 0 && currentMonthlyRate > 0) {
+                        // Calculate how many months needed to pay off remaining principal
+                        const newMonths = -Math.log(1 - currentRemainingPrincipal * currentMonthlyRate / monthlyPayment) / Math.log(1 + currentMonthlyRate);
+                        remainingMonths = Math.ceil(newMonths);
+                    } else if (currentRemainingPrincipal <= 0) {
+                        remainingMonths = 0;
+                    }
+                } else if (event.strategy === 'lowerInstallment') {
+                    // Recalculate monthly payment based on reduced principal
+                    if (currentRemainingPrincipal > 0 && remainingMonths > 0) {
+                        monthlyPayment = calculateMonthlyPayment(currentRemainingPrincipal, currentMonthlyRate, remainingMonths);
+                    }
+                }
+
+                // Add overpayment message
+                const strategyText = event.strategy === 'shortenPeriod' ? trans.shortenPeriod : trans.lowerInstallment;
+                if (overpayment < event.amount) {
+                    eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(event.amount)} PLN) - ${strategyText}`);
+                } else {
+                    eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN - ${strategyText}`);
+                }
             }
         });
 
-        // Limit overpayment to remaining principal after installment payment
-        const remainingAfterInstallment = remainingPrincipal - principalPayment;
-        overpayment = Math.min(plannedOverpayment, Math.max(0, remainingAfterInstallment));
-
-        // Add overpayment message
-        if (overpayment > 0) {
-            if (overpayment < plannedOverpayment) {
-                eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(plannedOverpayment)} PLN)`);
-            } else {
-                eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN`);
-            }
-        }
-
-        remainingPrincipal -= principalPayment + overpayment;
+        remainingPrincipal = currentRemainingPrincipal;
 
         // Calculate date
         const date = new Date(startYear, startMonth - 1 + i - 1);
@@ -718,7 +734,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
         // Calculate real installment (accounting for inflation)
         const monthlyInflationRate = currentInflation / 100 / 12;
         const inflationFactor = Math.pow(1 + monthlyInflationRate, i - 1);
-        const realPayment = (totalPayment + overpayment) / inflationFactor;
+        const realPayment = (totalPayment + totalOverpayment) / inflationFactor;
 
         schedule.push({
             month: i,
@@ -727,28 +743,10 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             realPayment: realPayment,
             principal: principalPayment,
             interest: interestPayment,
-            overpayment: overpayment,
+            overpayment: totalOverpayment,
             balance: Math.max(0, remainingPrincipal),
             events: eventDescriptions
         });
-
-        // Recalculate installment if there was overpayment
-        if (overpayment > 0 && remainingPrincipal > 0 && !isInHoliday) {
-            if (overpaymentStrategy === 'shortenPeriod') {
-                // Shorten period - installment stays same, number of installments decreases
-                // Calculate how many installments remain at current installment
-                const currentMonthlyRate = currentRate / 100 / 12;
-                if (currentMonthlyRate > 0 && monthlyPayment > remainingPrincipal * currentMonthlyRate) {
-                    remainingMonths = Math.ceil(
-                        Math.log(monthlyPayment / (monthlyPayment - remainingPrincipal * currentMonthlyRate)) /
-                        Math.log(1 + currentMonthlyRate)
-                    );
-                }
-            } else {
-                // Lower installment - number of installments remains unchanged
-                monthlyPayment = calculateMonthlyPayment(remainingPrincipal, currentMonthlyRate, remainingMonths);
-            }
-        }
 
         if (!isInHoliday) {
             remainingMonths--;
@@ -839,31 +837,45 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             totalPayment = principalPayment + interestPayment;
         }
 
-        // Handle overpayments
-        let overpayment = 0;
-        let overpaymentStrategy = 'shortenPeriod'; // Default strategy
-        let plannedOverpayment = 0;
-        monthEvents.forEach(event => {
-            if (event.type === 'overpayment') {
-                plannedOverpayment += event.amount;
-                overpaymentStrategy = event.strategy; // Get strategy from event
+        // Handle overpayments - process each event separately
+        let totalOverpayment = 0;
+        let currentRemainingPrincipal = remainingPrincipal - principalPayment;
+
+        const overpaymentEvents = monthEvents.filter(e => e.type === 'overpayment');
+        overpaymentEvents.forEach(event => {
+            // Limit overpayment to remaining principal
+            const overpayment = Math.min(event.amount, Math.max(0, currentRemainingPrincipal));
+
+            if (overpayment > 0) {
+                currentRemainingPrincipal -= overpayment;
+                totalOverpayment += overpayment;
+
+                // Apply strategy for this specific overpayment (decreasing installments)
+                if (event.strategy === 'shortenPeriod') {
+                    // Recalculate remaining months based on reduced principal
+                    if (currentRemainingPrincipal > 0 && constantPrincipal > 0) {
+                        remainingMonths = Math.ceil(currentRemainingPrincipal / constantPrincipal);
+                    } else if (currentRemainingPrincipal <= 0) {
+                        remainingMonths = 0;
+                    }
+                } else if (event.strategy === 'lowerInstallment') {
+                    // Recalculate constant principal based on reduced principal
+                    if (currentRemainingPrincipal > 0 && remainingMonths > 0) {
+                        constantPrincipal = currentRemainingPrincipal / remainingMonths;
+                    }
+                }
+
+                // Add overpayment message
+                const strategyText = event.strategy === 'shortenPeriod' ? trans.shortenPeriod : trans.lowerInstallment;
+                if (overpayment < event.amount) {
+                    eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(event.amount)} PLN) - ${strategyText}`);
+                } else {
+                    eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN - ${strategyText}`);
+                }
             }
         });
 
-        // Limit overpayment to remaining principal after installment payment
-        const remainingAfterInstallment = remainingPrincipal - principalPayment;
-        overpayment = Math.min(plannedOverpayment, Math.max(0, remainingAfterInstallment));
-
-        // Add overpayment message
-        if (overpayment > 0) {
-            if (overpayment < plannedOverpayment) {
-                eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(plannedOverpayment)} PLN)`);
-            } else {
-                eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN`);
-            }
-        }
-
-        remainingPrincipal -= principalPayment + overpayment;
+        remainingPrincipal = currentRemainingPrincipal;
 
         // Calculate date
         const date = new Date(startYear, startMonth - 1 + i - 1);
@@ -872,7 +884,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
         // Calculate real installment (accounting for inflation)
         const monthlyInflationRate = currentInflation / 100 / 12;
         const inflationFactor = Math.pow(1 + monthlyInflationRate, i - 1);
-        const realPayment = (totalPayment + overpayment) / inflationFactor;
+        const realPayment = (totalPayment + totalOverpayment) / inflationFactor;
 
         schedule.push({
             month: i,
@@ -881,23 +893,10 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             realPayment: realPayment,
             principal: principalPayment,
             interest: interestPayment,
-            overpayment: overpayment,
+            overpayment: totalOverpayment,
             balance: Math.max(0, remainingPrincipal),
             events: eventDescriptions
         });
-
-        // Recalculate constant principal part after overpayment
-        if (overpayment > 0 && remainingPrincipal > 0 && !isInHoliday) {
-            if (overpaymentStrategy === 'shortenPeriod') {
-                // Shorten period - principal part grows
-                // Calculate new number of installments assuming principal part remains unchanged
-                const estimatedMonths = Math.ceil(remainingPrincipal / constantPrincipal);
-                remainingMonths = estimatedMonths;
-            } else {
-                // Decrease principal part - number of installments remains unchanged
-                constantPrincipal = remainingPrincipal / remainingMonths;
-            }
-        }
 
         if (!isInHoliday) {
             remainingMonths--;
@@ -982,7 +981,7 @@ function displayResults(schedule) {
             <td class="bg-principal text-end">${formatNumber(row.principal + row.overpayment)}</td>
             <td class="bg-interest text-end">${formatNumber(row.interest)}</td>
             <td class="text-end">${formatNumber(row.balance)}</td>
-            <td>${row.events.length > 0 ? row.events.join(', ') : '-'}</td>
+            <td>${row.events.length > 0 ? row.events.join('<br>') : '-'}</td>
         `;
         tbody.appendChild(tr);
     });
