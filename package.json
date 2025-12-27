@@ -1,0 +1,31 @@
+{
+  "name": "mortgage-calculator",
+  "version": "1.0.0",
+  "description": "A simple yet advanced mortgage calculator",
+  "main": "script.js",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug"
+  },
+  "keywords": [
+    "mortgage",
+    "calculator",
+    "loan",
+    "finance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/jest": "^29.5.11",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

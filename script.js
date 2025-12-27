@@ -1176,3 +1176,52 @@ function clearSimulation() {
     document.getElementById('summarySection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'none';
 }
+
+// Export functions for testing (Node.js environment only)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        // Translation functions
+        translations,
+        detectBrowserLanguage,
+        changeLanguage,
+        applyTranslations,
+
+        // Calculation functions
+        calculateMonthlyPayment,
+        calculateEqualInstallments,
+        calculateDecreasingInstallments,
+        calculateLoan,
+
+        // Utility functions
+        formatNumber,
+        displayResults,
+
+        // Event functions
+        saveEvent,
+        renderEvents,
+        removeEvent,
+        updateEventForm,
+        showEventModal,
+
+        // Storage functions
+        getSimulations,
+        saveSimulations,
+        getFormData,
+        setFormData,
+
+        // Simulation functions
+        saveSimulation,
+        loadSimulation,
+        deleteSimulation,
+        clearSimulation,
+        renderSimulationsList,
+        showSaveModal,
+        showLoadModal,
+
+        // Global state (for testing)
+        getEvents: () => events,
+        setEvents: (newEvents) => { events = newEvents; },
+        getCurrentLanguage: () => currentLanguage,
+        setCurrentLanguage: (lang) => { currentLanguage = lang; }
+    };
+}

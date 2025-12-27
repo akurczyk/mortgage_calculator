@@ -1,5 +1,7 @@
 # Mortgage Calculator
 
+![Tests](https://github.com/akurczyk/mortgage_calculator/workflows/Tests/badge.svg)
+
 A simple yet advanced mortgage calculator created for fun with [Claude Code](https://claude.com/claude-code).
 
 **🌐 Live Demo:** [http://hipoteka.kurczyk.xyz](http://hipoteka.kurczyk.xyz)
@@ -34,6 +36,69 @@ I couldn't find a similar calculator that would allow easy simulation of:
 3. Add expected events (overpayments, interest rate changes, etc.)
 4. Click "Calculate Payment Schedule"
 5. Optionally save the simulation for later use
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+ and npm
+
+### Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Install Playwright browsers (for E2E tests)
+npx playwright install
+```
+
+### Running Tests
+
+```bash
+# Run all tests (unit + E2E)
+npm test
+
+# Run only unit tests
+npm run test:unit
+
+# Run unit tests in watch mode
+npm run test:unit:watch
+
+# Run unit tests with coverage
+npm run test:unit:coverage
+
+# Run only E2E tests
+npm run test:e2e
+
+# Run E2E tests in UI mode
+npm run test:e2e:ui
+
+# Run E2E tests in headed mode (see browser)
+npm run test:e2e:headed
+
+# Debug E2E tests
+npm run test:e2e:debug
+```
+
+### Test Coverage
+
+The project includes comprehensive test coverage:
+- **Unit Tests**: Test calculation functions, event handling, utilities, storage, and internationalization
+- **E2E Tests**: Test complete user workflows in real browsers (Chrome, Firefox, Safari)
+
+Coverage goals:
+- Lines: 70%+
+- Functions: 70%+
+- Branches: 70%+
+- Statements: 70%+
+
+### CI/CD
+
+Tests run automatically on every push and pull request via GitHub Actions. The workflow includes:
+- Unit tests with coverage reporting
+- E2E tests across multiple browsers
+- Automatic artifact upload on failures
 
 ## Technologies
 
