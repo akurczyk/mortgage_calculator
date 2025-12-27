@@ -1,15 +1,27 @@
 // Jest setup file for unit tests
 
 // Mock localStorage
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-};
-global.localStorage = localStorageMock;
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: jest.fn((key) => store[key] || null),
+    setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
+    removeItem: jest.fn((key) => { delete store[key]; }),
+    clear: jest.fn(() => { store = {}; }),
+    get length() { return Object.keys(store).length; },
+    key: jest.fn((index) => {
+      const keys = Object.keys(store);
+      return keys[index] || null;
+    }),
+  };
+})();
 
-// Mock bootstrap (if needed)
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+  writable: true
+});
+
+// Mock bootstrap
 global.bootstrap = {
   Modal: jest.fn().mockImplementation(() => ({
     show: jest.fn(),
@@ -19,8 +31,11 @@ global.bootstrap = {
 
 // Reset mocks before each test
 beforeEach(() => {
-  localStorage.getItem.mockClear();
-  localStorage.setItem.mockClear();
-  localStorage.removeItem.mockClear();
-  localStorage.clear.mockClear();
+  localStorageMock.getItem.mockClear();
+  localStorageMock.setItem.mockClear();
+  localStorageMock.removeItem.mockClear();
+  localStorageMock.clear.mockClear();
+  if (localStorageMock.key.mockClear) {
+    localStorageMock.key.mockClear();
+  }
 });

@@ -54,8 +54,8 @@ module.exports = defineConfig({
 
   // Run local dev server before starting tests
   webServer: {
-    command: 'npx http-server -p 8080 -c-1',
-    port: 8080,
+    command: 'npx http-server . -p 8080 -c-1',
+    url: 'http://localhost:8080',
     timeout: 120000,
     reuseExistingServer: !process.env.CI,
   },

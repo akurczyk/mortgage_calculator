@@ -42,72 +42,92 @@ describe('Utility Functions', () => {
   });
 
   describe('detectBrowserLanguage', () => {
-    const originalNavigator = global.navigator;
+    let languageGetter;
+    let userLanguageGetter;
+
+    beforeEach(() => {
+      // Store original getters
+      languageGetter = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language');
+      userLanguageGetter = Object.getOwnPropertyDescriptor(Navigator.prototype, 'userLanguage');
+    });
 
     afterEach(() => {
-      // Restore original navigator
-      global.navigator = originalNavigator;
+      // Restore original getters
+      if (languageGetter) {
+        Object.defineProperty(Navigator.prototype, 'language', languageGetter);
+      }
+      if (userLanguageGetter) {
+        Object.defineProperty(Navigator.prototype, 'userLanguage', userLanguageGetter);
+      }
     });
 
     test('detects Polish language', () => {
-      global.navigator = {
-        language: 'pl',
-        userLanguage: 'pl',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'pl',
+        configurable: true
+      });
+      Object.defineProperty(Navigator.prototype, 'userLanguage', {
+        get: () => 'pl',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('pl');
     });
 
     test('detects Polish language with region code', () => {
-      global.navigator = {
-        language: 'pl-PL',
-        userLanguage: 'pl-PL',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'pl-PL',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('pl');
     });
 
     test('defaults to English for English language', () => {
-      global.navigator = {
-        language: 'en',
-        userLanguage: 'en',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'en',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('en');
     });
 
     test('defaults to English for English with region code', () => {
-      global.navigator = {
-        language: 'en-US',
-        userLanguage: 'en-US',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'en-US',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('en');
     });
 
     test('defaults to English for other languages', () => {
-      global.navigator = {
-        language: 'de',
-        userLanguage: 'de',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'de',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('en');
     });
 
     test('defaults to English for French', () => {
-      global.navigator = {
-        language: 'fr-FR',
-        userLanguage: 'fr-FR',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => 'fr-FR',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('en');
     });
 
     test('uses userLanguage as fallback', () => {
-      global.navigator = {
-        language: undefined,
-        userLanguage: 'pl',
-      };
+      Object.defineProperty(Navigator.prototype, 'language', {
+        get: () => undefined,
+        configurable: true
+      });
+      Object.defineProperty(Navigator.prototype, 'userLanguage', {
+        get: () => 'pl',
+        configurable: true
+      });
 
       expect(detectBrowserLanguage()).toBe('pl');
     });

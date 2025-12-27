@@ -27,6 +27,11 @@ describe('Storage Functions', () => {
       </select>
       <input id="startDate" value="2024-01" />
       <input id="inflationRate" value="3.0" />
+      <table>
+        <tbody id="eventsTableBody">
+          <tr id="noEventsRow"></tr>
+        </tbody>
+      </table>
     `;
   });
 
