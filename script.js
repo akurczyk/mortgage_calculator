@@ -711,11 +711,11 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
 
         remainingPrincipal -= principalPayment + overpayment;
 
-        // Obliczenie daty
+        // Calculate date
         const date = new Date(startYear, startMonth - 1 + i - 1);
         const dateStr = `${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
 
-        // Obliczenie raty realnej (uwzględniającej inflację)
+        // Calculate real installment (accounting for inflation)
         const monthlyInflationRate = currentInflation / 100 / 12;
         const inflationFactor = Math.pow(1 + monthlyInflationRate, i - 1);
         const realPayment = (totalPayment + overpayment) / inflationFactor;
@@ -865,11 +865,11 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
 
         remainingPrincipal -= principalPayment + overpayment;
 
-        // Obliczenie daty
+        // Calculate date
         const date = new Date(startYear, startMonth - 1 + i - 1);
         const dateStr = `${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
 
-        // Obliczenie raty realnej (uwzględniającej inflację)
+        // Calculate real installment (accounting for inflation)
         const monthlyInflationRate = currentInflation / 100 / 12;
         const inflationFactor = Math.pow(1 + monthlyInflationRate, i - 1);
         const realPayment = (totalPayment + overpayment) / inflationFactor;
@@ -941,9 +941,12 @@ function displayResults(schedule) {
     const months = totalMonths % 12;
     let installmentText = totalMonths.toString();
     if (years > 0) {
-        installmentText += ` (${years} ${years === 1 ? 'rok' : years < 5 ? 'lata' : 'lat'}`;
+        const yearText = currentLanguage === 'pl'
+            ? (years === 1 ? 'rok' : years < 5 ? 'lata' : 'lat')
+            : (years === 1 ? 'year' : 'years');
+        installmentText += ` (${years} ${yearText}`;
         if (months > 0) {
-            installmentText += ` ${months} mies.`;
+            installmentText += ` ${months} ${currentLanguage === 'pl' ? 'mies.' : 'mo.'}`;
         }
         installmentText += ')';
     }

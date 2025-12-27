@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 <body>
     <div class="container-fluid py-4">
         <div class="container">
-            <!-- Przyciski zmiany języka -->
+            <!-- Language change buttons -->
             <div class="text-end mb-2">
                 <button class="btn btn-sm btn-outline-primary" id="langPL" onclick="changeLanguage('pl')">PL</button>
                 <button class="btn btn-sm btn-outline-primary" id="langEN" onclick="changeLanguage('en')">EN</button>
@@ -21,7 +21,7 @@
             <h1 class="text-center" data-i18n="title">Kalkulator Kredytu Hipotecznego</h1>
             <p class="text-center text-muted description mb-4" style="font-size: 0.9rem;" data-i18n="calculatorDescription">Kalkulator pozwala obliczyć wysokości rat z uwzględnieniem nadpłat i nadpłat cyklicznych, zmian oprocentowania (WIBOR) w zadanym czasie oraz podaje realną wartość raty (uwzględniając inflację). Ponadto możliwe jest zapisanie parametrów i zdarzeń w pamięci przeglądarki.</p>
 
-            <!-- Przyciski akcji - górne -->
+            <!-- Action buttons - top -->
             <div class="action-buttons-top mb-3">
                 <button class="btn btn-secondary btn-sm" id="saveBtn" data-i18n="btnSave" data-i18n-title="btnSaveTitle">
                     Zapisz
@@ -34,9 +34,9 @@
                 </button>
             </div>
 
-            <!-- Dwukolumnowy układ -->
+            <!-- Two-column layout -->
             <div class="row g-4 mb-4">
-                <!-- Lewa kolumna - Parametry -->
+                <!-- Left column - Parameters -->
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <!-- Prawa kolumna - Zdarzenia -->
+                <!-- Right column - Events -->
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header">
@@ -108,14 +108,14 @@
                 </div>
             </div>
 
-            <!-- Przycisk obliczania - dolny -->
+            <!-- Calculate button - bottom -->
             <div class="action-buttons-bottom mb-4">
                 <button class="btn btn-primary btn-lg" id="calculateBtn" data-i18n="btnCalculate">
                     Oblicz harmonogram spłat
                 </button>
             </div>
 
-            <!-- Podsumowanie -->
+            <!-- Summary -->
             <div id="summarySection" class="card mb-4" style="display: none;">
                 <div class="card-header">
                     <h5 class="mb-0" data-i18n="summary">Podsumowanie</h5>
@@ -150,7 +150,7 @@
                 </div>
             </div>
 
-            <!-- Tabela wyników -->
+            <!-- Results table -->
             <div id="resultsSection" style="display: none;">
                 <div class="card">
                     <div class="card-header">
@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <!-- Modal wydarzenia -->
+    <!-- Event modal -->
     <div class="modal fade" id="eventModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -250,7 +250,7 @@
         </div>
     </div>
 
-    <!-- Modal zapisu -->
+    <!-- Save modal -->
     <div class="modal fade" id="saveModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -272,7 +272,7 @@
         </div>
     </div>
 
-    <!-- Modal wczytywania -->
+    <!-- Load modal -->
     <div class="modal fade" id="loadModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
