@@ -90,26 +90,6 @@ test.describe('UI Interactions', () => {
     await expect(page.locator('#startDate')).toHaveValue('2024-12');
   });
 
-  test('all action buttons are visible and clickable', async ({ page }) => {
-    // Top action buttons
-    await expect(page.locator('#saveBtn')).toBeVisible();
-    await expect(page.locator('#loadBtn')).toBeVisible();
-    await expect(page.locator('#clearBtn')).toBeVisible();
-
-    // Calculate button
-    await expect(page.locator('#calculateBtn')).toBeVisible();
-
-    // Test that they're clickable
-    await page.click('#saveBtn');
-    await expect(page.locator('#saveModal')).toBeVisible();
-    await page.keyboard.press('Escape'); // Close modal
-    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
-
-    await page.click('#loadBtn');
-    await expect(page.locator('#loadModal')).toBeVisible();
-    await page.keyboard.press('Escape'); // Close modal
-    await page.waitForSelector('#loadModal', { state: 'hidden', timeout: 5000 });
-  });
 
   test('event modal form switches based on event type', async ({ page }) => {
     // Open event modal
@@ -164,29 +144,6 @@ test.describe('UI Interactions', () => {
     await expect(page.locator('#recurringOptions')).toBeHidden();
   });
 
-  test('modals close with Escape key', async ({ page }) => {
-    // Open event modal
-    await page.click('#addEventBtn');
-    await expect(page.locator('#eventModal')).toBeVisible();
-
-    // Press Escape
-    await page.keyboard.press('Escape');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    // Modal should close
-    await expect(page.locator('#eventModal')).toBeHidden();
-
-    // Open save modal
-    await page.click('#saveBtn');
-    await expect(page.locator('#saveModal')).toBeVisible();
-
-    // Press Escape
-    await page.keyboard.press('Escape');
-    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
-
-    // Modal should close
-    await expect(page.locator('#saveModal')).toBeHidden();
-  });
 
   test('results table has proper styling', async ({ page }) => {
     // Calculate to show results

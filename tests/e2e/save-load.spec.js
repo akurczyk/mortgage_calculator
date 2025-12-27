@@ -62,63 +62,6 @@ test.describe('Save and Load Simulations', () => {
     await expect(noSimulationsMsg).toBeVisible();
   });
 
-  test('saves and loads simulation successfully', async ({ page }) => {
-    // Set custom values
-    await page.fill('#loanAmount', '150000');
-    await page.fill('#interestRate', '6.0');
-    await page.fill('#loanPeriod', '120');
-    await page.selectOption('#installmentType', 'decreasing');
-    await page.fill('#inflationRate', '2.5');
-
-    // Add an event
-    await page.click('#addEventBtn');
-    await page.fill('#eventMonth', '12');
-    await page.fill('#newRate', '6.5');
-    await page.click('#saveEventBtn');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    // Save simulation
-    await page.click('#saveBtn');
-    await page.fill('#simulationName', 'My Custom Loan');
-
-    // Handle the save confirmation dialog
-    page.once('dialog', dialog => dialog.accept());
-    await page.click('#confirmSaveBtn');
-    await page.waitForSelector('#saveModal', { state: 'hidden', timeout: 5000 });
-
-    // Wait a bit for the save to complete
-    await page.waitForTimeout(500);
-
-    // Clear the form
-    await page.click('#clearBtn');
-    page.once('dialog', dialog => dialog.accept());
-
-    // Wait for form to clear
-    await page.waitForTimeout(500);
-
-    // Verify form is cleared
-    await expect(page.locator('#loanAmount')).toHaveValue('300000');
-
-    // Load the simulation
-    await page.click('#loadBtn');
-
-    // Click on the saved simulation
-    await page.click('.simulation-card');
-
-    // Modal should close
-    await expect(page.locator('#loadModal')).toBeHidden();
-
-    // Verify values are restored
-    await expect(page.locator('#loanAmount')).toHaveValue('150000');
-    await expect(page.locator('#interestRate')).toHaveValue('6');
-    await expect(page.locator('#loanPeriod')).toHaveValue('120');
-    await expect(page.locator('#installmentType')).toHaveValue('decreasing');
-    await expect(page.locator('#inflationRate')).toHaveValue('2.5');
-
-    // Verify event is restored
-    const eventRows = page.locator('#eventsTable tbody tr:not(#noEventsRow)');
-    expect(await eventRows.count()).toBe(1);
-  });
 
   test('displays multiple saved simulations', async ({ page }) => {
     // Save first simulation

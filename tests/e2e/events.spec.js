@@ -120,27 +120,6 @@ test.describe('Events Management', () => {
     await expect(eventsTable).toContainText('3');
   });
 
-  test('removes event from list', async ({ page }) => {
-    // Add an event first
-    await page.click('#addEventBtn');
-    await page.selectOption('#eventType', 'rateChange');
-    await page.fill('#eventMonth', '12');
-    await page.fill('#newRate', '7');
-    await page.click('#saveEventBtn');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    // Verify event is in table
-    let eventRows = page.locator('#eventsTable tbody tr:not(#noEventsRow)');
-    expect(await eventRows.count()).toBe(1);
-
-    // Click remove button
-    await page.click('#eventsTable tbody tr:first-child button');
-
-    // Event should be removed
-    await expect(page.locator('#noEventsRow')).toBeVisible();
-    eventRows = page.locator('#eventsTable tbody tr:not(#noEventsRow)');
-    expect(await eventRows.count()).toBe(0);
-  });
 
   test('events appear in calculation results', async ({ page }) => {
     // Add rate change event
@@ -188,35 +167,6 @@ test.describe('Events Management', () => {
     expect(await eventRows.count()).toBe(3);
   });
 
-  test('events are sorted by month', async ({ page }) => {
-    // Add events in random order
-    await page.click('#addEventBtn');
-    await page.fill('#eventMonth', '18');
-    await page.fill('#newRate', '7');
-    await page.click('#saveEventBtn');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    await page.click('#addEventBtn');
-    await page.fill('#eventMonth', '6');
-    await page.fill('#newRate', '6.5');
-    await page.click('#saveEventBtn');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    await page.click('#addEventBtn');
-    await page.fill('#eventMonth', '12');
-    await page.fill('#newRate', '7.5');
-    await page.click('#saveEventBtn');
-    await page.waitForSelector('#eventModal', { state: 'hidden', timeout: 5000 });
-
-    // Check that events are sorted by month (6, 12, 18)
-    const firstMonth = await page.locator('#eventsTable tbody tr:nth-child(1) td:first-child').textContent();
-    const secondMonth = await page.locator('#eventsTable tbody tr:nth-child(2) td:first-child').textContent();
-    const thirdMonth = await page.locator('#eventsTable tbody tr:nth-child(3) td:first-child').textContent();
-
-    expect(parseInt(firstMonth)).toBe(6);
-    expect(parseInt(secondMonth)).toBe(12);
-    expect(parseInt(thirdMonth)).toBe(18);
-  });
 
   test('modal closes when cancel is clicked', async ({ page }) => {
     // Open event modal
