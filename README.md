@@ -2,6 +2,8 @@
 
 A simple yet advanced mortgage calculator created for fun with [Claude Code](https://claude.com/claude-code).
 
+**🌐 Live Demo:** [http://hipoteka.kurczyk.xyz](http://hipoteka.kurczyk.xyz)
+
 ## Why this project?
 
 I couldn't find a similar calculator that would allow easy simulation of:

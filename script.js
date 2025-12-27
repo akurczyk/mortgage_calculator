@@ -3,6 +3,7 @@
 // Słownik tłumaczeń
 const translations = {
     pl: {
+        pageTitle: 'Kalkulator Kredytu Hipotecznego',
         title: 'Kalkulator Kredytu Hipotecznego',
         calculatorDescription: 'Kalkulator pozwala obliczyć wysokości rat z uwzględnieniem nadpłat i nadpłat cyklicznych, zmian oprocentowania (WIBOR) w zadanym czasie oraz podaje realną wartość raty (uwzględniając inflację). Ponadto możliwe jest zapisanie parametrów i zdarzeń w pamięci przeglądarki. <a href="https://github.com/akurczyk/mortgage_calculator" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); text-decoration: underline;">Projekt na GitHub</a>.',
         btnSave: 'Zapisz',
@@ -106,6 +107,7 @@ const translations = {
         eventsCount: 'Wydarzenia'
     },
     en: {
+        pageTitle: 'Mortgage Calculator',
         title: 'Mortgage Calculator',
         calculatorDescription: 'The calculator allows you to calculate installment amounts taking into account overpayments and recurring overpayments, interest rate changes (WIBOR) over time, and provides the real value of the installment (accounting for inflation). Additionally, it is possible to save parameters and events in browser memory. <a href="https://github.com/akurczyk/mortgage_calculator" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); text-decoration: underline;">Project on GitHub</a>.',
         btnSave: 'Save',
@@ -242,6 +244,9 @@ function applyTranslations() {
 
     // Zmień atrybut lang w HTML
     document.documentElement.setAttribute('lang', currentLanguage);
+
+    // Zmień tytuł strony
+    document.title = trans.pageTitle;
 
     // Tłumaczenie elementów z data-i18n
     document.querySelectorAll('[data-i18n]').forEach(element => {
