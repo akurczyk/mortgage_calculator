@@ -4,6 +4,8 @@ A simple yet advanced mortgage calculator created for fun with [Claude Code](htt
 
 **🌐 Live Demo:** [http://hipoteka.kurczyk.xyz](http://hipoteka.kurczyk.xyz)
 
+**📌 Note:** Originally designed for Polish mortgages, but should work with any mortgage type.
+
 ## Why this project?
 
 I couldn't find a similar calculator that would allow easy simulation of:
@@ -21,8 +23,9 @@ I couldn't find a similar calculator that would allow easy simulation of:
 - ✅ **Inflation** - calculate real installment values accounting for inflation
 - ✅ **Payment holidays** - ability to plan interest-only payment periods
 - ✅ **Save simulations** - parameters and events saved in browser's localStorage
-- ✅ **Bilingual** - interface in Polish and English
+- ✅ **Bilingual** - interface in Polish and English (English by default)
 - ✅ **Responsive design** - works on desktop and mobile devices
+- ✅ **Clean design** - light indigo color scheme with Arial font
 
 ## How to use
 
@@ -37,8 +40,6 @@ I couldn't find a similar calculator that would allow easy simulation of:
 - HTML5
 - CSS3 (Bootstrap 5.3.0)
 - Vanilla JavaScript
-- Bootstrap Icons
-- Google Fonts (Poppins)
 
 ## Project structure
 
@@ -46,7 +47,7 @@ I couldn't find a similar calculator that would allow easy simulation of:
 mortgage_calculator/
 ├── index.html          # Main HTML file
 ├── script.js           # Calculator logic and i18n
-├── styles.css          # Styling (navy blue theme)
+├── styles.css          # Styling (light indigo theme)
 ├── .gitignore          # Git ignore file
 └── README.md           # This file
 ```

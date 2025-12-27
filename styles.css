@@ -1,21 +1,21 @@
-/* VERSION F: Navy Blue */
+/* VERSION F: Light Indigo */
 
 :root {
-    --primary-color: #2c5aa0;
-    --primary-dark: #1e3a70;
-    --primary-light: #4a7bc8;
+    --primary-color: #5c6bc0;
+    --primary-dark: #3f51b5;
+    --primary-light: #7986cb;
     --bg-color: #aaaaaa;
     --card-bg: #dddddd;
-    --text-dark: #1e3a70;
+    --text-dark: #3f51b5;
     --text-muted: #6c757d;
-    --border-color: #2c5aa0;
+    --border-color: #5c6bc0;
     --success: #1e7e34;
     --danger: #c62828;
     --info: #4a7bc8;
 }
 
 * {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 300;
 }
 
