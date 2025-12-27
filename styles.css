@@ -41,6 +41,23 @@ h1 {
 /* Language buttons */
 #langPL, #langEN {
     min-width: 50px;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background-color: transparent !important;
+}
+
+#langPL:hover, #langEN:hover {
+    background-color: var(--primary-light) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+#langPL:focus, #langEN:focus,
+#langPL:active, #langEN:active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: none !important;
 }
 
 .btn-outline-primary.active {
