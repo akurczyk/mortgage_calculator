@@ -1,6 +1,6 @@
-// ==================== WIELOJĘZYCZNOŚĆ ====================
+// ==================== INTERNATIONALIZATION ====================
 
-// Słownik tłumaczeń
+// Translation dictionary
 const translations = {
     pl: {
         pageTitle: 'Kalkulator Kredytu Hipotecznego',
@@ -71,12 +71,12 @@ const translations = {
         noSavedSimulations: 'Brak zapisanych symulacji',
         btnClose: 'Zamknij',
         btnRemove: 'Usuń',
-        // Dynamiczne teksty
+        // Dynamic texts
         years_1: 'rok',
         years_2_4: 'lata',
         years_5plus: 'lat',
         months_short: 'mies.',
-        // Komunikaty
+        // Messages
         fillAllFields: 'Proszę wypełnić wszystkie pola',
         invalidValues: 'Kwota kredytu i okres muszą być większe od 0',
         installmentMustBePositive: 'Numer raty musi być większy od 0',
@@ -90,7 +90,7 @@ const translations = {
         confirmClear: 'Czy na pewno chcesz wyczyścić obecne ustawienia?\n\nZapisane symulacje NIE zostaną usunięte.',
         confirmDelete: 'Czy na pewno chcesz usunąć tę symulację?',
         simulationSaved: 'Symulacja została zapisana!',
-        // Opisy zdarzeń
+        // Event descriptions
         changeToRate: 'Zmiana na',
         inflationLabel: 'Inflacja',
         rescheduleTo: 'Rozłożenie na',
@@ -100,7 +100,7 @@ const translations = {
         overpaymentLabel: 'Nadpłata',
         planLabel: 'plan',
         recurringOverpaymentLabel: 'Nadpłata cykliczna',
-        // Informacje o symulacji w liście
+        // Simulation list info
         amount: 'Kwota',
         interestRateLabel: 'Oprocentowanie',
         period: 'Okres',
@@ -175,12 +175,12 @@ const translations = {
         noSavedSimulations: 'No saved simulations',
         btnClose: 'Close',
         btnRemove: 'Remove',
-        // Dynamiczne teksty
+        // Dynamic texts
         years_1: 'year',
         years_2_4: 'years',
         years_5plus: 'years',
         months_short: 'mo.',
-        // Komunikaty
+        // Messages
         fillAllFields: 'Please fill in all fields',
         invalidValues: 'Loan amount and period must be greater than 0',
         installmentMustBePositive: 'Installment number must be greater than 0',
@@ -194,7 +194,7 @@ const translations = {
         confirmClear: 'Are you sure you want to clear current settings?\n\nSaved simulations will NOT be deleted.',
         confirmDelete: 'Are you sure you want to delete this simulation?',
         simulationSaved: 'Simulation has been saved!',
-        // Opisy zdarzeń
+        // Event descriptions
         changeToRate: 'Change to',
         inflationLabel: 'Inflation',
         rescheduleTo: 'Reschedule to',
@@ -204,7 +204,7 @@ const translations = {
         overpaymentLabel: 'Overpayment',
         planLabel: 'plan',
         recurringOverpaymentLabel: 'Recurring overpayment',
-        // Informacje o symulacji w liście
+        // Simulation list info
         amount: 'Amount',
         interestRateLabel: 'Interest rate',
         period: 'Period',
@@ -212,10 +212,10 @@ const translations = {
     }
 };
 
-// Obecny język
-let currentLanguage = 'pl';
+// Current language
+let currentLanguage = 'en';
 
-// Wykryj język przeglądarki
+// Detect browser language
 function detectBrowserLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
     if (browserLang.startsWith('pl')) {
@@ -225,40 +225,40 @@ function detectBrowserLanguage() {
     }
 }
 
-// Zmień język
+// Change language
 function changeLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('preferredLanguage', lang);
 
-    // Aktualizuj przyciski języka
+    // Update language buttons
     document.getElementById('langPL').classList.toggle('active', lang === 'pl');
     document.getElementById('langEN').classList.toggle('active', lang === 'en');
 
-    // Zastosuj tłumaczenia
+    // Apply translations
     applyTranslations();
 }
 
-// Zastosuj tłumaczenia do wszystkich elementów
+// Apply translations to all elements
 function applyTranslations() {
     const trans = translations[currentLanguage];
 
-    // Zmień atrybut lang w HTML
+    // Change lang attribute in HTML
     document.documentElement.setAttribute('lang', currentLanguage);
 
-    // Zmień tytuł strony
+    // Change page title
     document.title = trans.pageTitle;
 
-    // Tłumaczenie elementów z data-i18n
+    // Translate elements with data-i18n
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (trans[key]) {
-            // Dla option, button, td, th, label, h1, h5, div, p
+            // For option, button, td, th, label, h1, h5, div, p
             if (element.tagName === 'OPTION' || element.tagName === 'BUTTON' ||
                 element.tagName === 'TD' || element.tagName === 'TH' ||
                 element.tagName === 'LABEL' || element.tagName === 'H1' ||
                 element.tagName === 'H5' || element.tagName === 'DIV' ||
                 element.tagName === 'P') {
-                // Używamy innerHTML dla TD i P żeby obsłużyć <br>
+                // Use innerHTML for TD and P to handle <br>
                 if (element.tagName === 'TD' || element.tagName === 'P') {
                     element.innerHTML = trans[key];
                 } else {
@@ -268,7 +268,7 @@ function applyTranslations() {
         }
     });
 
-    // Tłumaczenie atrybutów title
+    // Translate title attributes
     document.querySelectorAll('[data-i18n-title]').forEach(element => {
         const key = element.getAttribute('data-i18n-title');
         if (trans[key]) {
@@ -276,7 +276,7 @@ function applyTranslations() {
         }
     });
 
-    // Tłumaczenie placeholderów
+    // Translate placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         if (trans[key]) {
@@ -284,22 +284,22 @@ function applyTranslations() {
         }
     });
 
-    // Ponowne renderowanie wydarzeń (jeśli są)
+    // Re-render events (if any)
     if (events.length > 0) {
         renderEvents();
     }
 }
 
-// Stan aplikacji
+// Application state
 let events = [];
 let eventModal;
 let saveModal;
 let loadModal;
 const STORAGE_KEY = 'mortgageSimulations';
 
-// Inicjalizacja
+// Initialization
 document.addEventListener('DOMContentLoaded', function() {
-    // Wykryj język
+    // Detect language
     const savedLanguage = localStorage.getItem('preferredLanguage');
     if (savedLanguage) {
         currentLanguage = savedLanguage;
@@ -307,24 +307,24 @@ document.addEventListener('DOMContentLoaded', function() {
         currentLanguage = detectBrowserLanguage();
     }
 
-    // Ustaw aktywny przycisk języka
+    // Set active language button
     document.getElementById('langPL').classList.toggle('active', currentLanguage === 'pl');
     document.getElementById('langEN').classList.toggle('active', currentLanguage === 'en');
 
-    // Zastosuj tłumaczenia
+    // Apply translations
     applyTranslations();
 
-    // Ustawienie domyślnej daty na aktualny miesiąc
+    // Set default date to current month
     const now = new Date();
     const currentMonth = now.toISOString().slice(0, 7);
     document.getElementById('startDate').value = currentMonth;
 
-    // Inicjalizacja modali Bootstrap
+    // Initialize Bootstrap modals
     eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
     saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
     loadModal = new bootstrap.Modal(document.getElementById('loadModal'));
 
-    // Event listenery
+    // Event listeners
     document.getElementById('addEventBtn').addEventListener('click', showEventModal);
     document.getElementById('saveEventBtn').addEventListener('click', saveEvent);
     document.getElementById('calculateBtn').addEventListener('click', calculateLoan);
@@ -334,16 +334,16 @@ document.addEventListener('DOMContentLoaded', function() {
         recurringOptions.style.display = this.checked ? 'block' : 'none';
     });
 
-    // Event listenery dla zapisywania/wczytywania
+    // Event listeners for save/load
     document.getElementById('saveBtn').addEventListener('click', showSaveModal);
     document.getElementById('loadBtn').addEventListener('click', showLoadModal);
     document.getElementById('clearBtn').addEventListener('click', clearSimulation);
     document.getElementById('confirmSaveBtn').addEventListener('click', saveSimulation);
 });
 
-// Pokaż modal wydarzenia
+// Show event modal
 function showEventModal() {
-    // Reset checkboxa i ukrycie opcji cyklicznych
+    // Reset checkbox and hide recurring options
     document.getElementById('isRecurring').checked = false;
     document.getElementById('recurringOptions').style.display = 'none';
 
@@ -351,7 +351,7 @@ function showEventModal() {
     eventModal.show();
 }
 
-// Aktualizuj formularz wydarzenia w zależności od typu
+// Update event form based on type
 function updateEventForm() {
     const eventType = document.getElementById('eventType').value;
     const newRateGroup = document.getElementById('newRateGroup');
@@ -360,14 +360,14 @@ function updateEventForm() {
     const periodChangeGroup = document.getElementById('periodChangeGroup');
     const inflationChangeGroup = document.getElementById('inflationChangeGroup');
 
-    // Ukryj wszystkie
+    // Hide all
     newRateGroup.style.display = 'none';
     overpaymentGroup.style.display = 'none';
     loanHolidayGroup.style.display = 'none';
     periodChangeGroup.style.display = 'none';
     inflationChangeGroup.style.display = 'none';
 
-    // Pokaż odpowiednie
+    // Show appropriate
     if (eventType === 'rateChange') {
         newRateGroup.style.display = 'block';
     } else if (eventType === 'overpayment') {
@@ -381,7 +381,7 @@ function updateEventForm() {
     }
 }
 
-// Zapisz wydarzenie
+// Save event
 function saveEvent() {
     const trans = translations[currentLanguage];
     const eventType = document.getElementById('eventType').value;
@@ -423,7 +423,7 @@ function saveEvent() {
                 return;
             }
 
-            // Tworzenie wielu wydarzeń nadpłaty
+            // Create multiple overpayment events
             for (let i = 0; i < count; i++) {
                 const event = {
                     id: Date.now() + i,
@@ -495,12 +495,12 @@ function saveEvent() {
     eventModal.hide();
 }
 
-// Renderuj listę wydarzeń
+// Render events list
 function renderEvents() {
     const tbody = document.getElementById('eventsTableBody');
     const noEventsRow = document.getElementById('noEventsRow');
 
-    // Usuń wszystkie wiersze oprócz noEventsRow
+    // Remove all rows except noEventsRow
     const rows = tbody.querySelectorAll('tr:not(#noEventsRow)');
     rows.forEach(row => row.remove());
 
@@ -553,17 +553,17 @@ function renderEvents() {
         `;
     });
 
-    // Dodaj nowe wiersze
+    // Add new rows
     tbody.insertAdjacentHTML('beforeend', html);
 }
 
-// Usuń wydarzenie
+// Remove event
 function removeEvent(eventId) {
     events = events.filter(e => e.id !== eventId);
     renderEvents();
 }
 
-// Główna funkcja kalkulacji kredytu
+// Main loan calculation function
 function calculateLoan() {
     const trans = translations[currentLanguage];
     const loanAmount = parseFloat(document.getElementById('loanAmount').value);
@@ -573,7 +573,7 @@ function calculateLoan() {
     const startDateStr = document.getElementById('startDate').value;
     const inflationRate = parseFloat(document.getElementById('inflationRate').value);
 
-    // Walidacja
+    // Validation
     if (!loanAmount || !annualRate || !loanPeriod || !startDateStr) {
         alert(trans.fillAllFields);
         return;
@@ -584,10 +584,10 @@ function calculateLoan() {
         return;
     }
 
-    // Parsowanie daty startowej
+    // Parse start date
     const [startYear, startMonth] = startDateStr.split('-').map(Number);
 
-    // Kalkulacja
+    // Calculation
     let schedule;
     if (installmentType === 'equal') {
         schedule = calculateEqualInstallments(loanAmount, annualRate, loanPeriod, startYear, startMonth, inflationRate);
@@ -595,11 +595,11 @@ function calculateLoan() {
         schedule = calculateDecreasingInstallments(loanAmount, annualRate, loanPeriod, startYear, startMonth, inflationRate);
     }
 
-    // Wyświetlenie wyników
+    // Display results
     displayResults(schedule);
 }
 
-// Kalkulacja rat równych (annuitetowych)
+// Calculate equal installments (annuity)
 function calculateEqualInstallments(principal, annualRate, months, startYear, startMonth, inflationRate) {
     const trans = translations[currentLanguage];
     const schedule = [];
@@ -608,19 +608,19 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
     let currentInflation = inflationRate;
     const monthlyRate = annualRate / 100 / 12;
 
-    // Obliczenie początkowej raty
+    // Calculate initial installment
     let monthlyPayment = calculateMonthlyPayment(principal, monthlyRate, months);
     let remainingMonths = months;
     let i = 1;
     let isInHoliday = false;
     let holidayEndMonth = 0;
 
-    while (remainingPrincipal > 0.01 && i <= months + 1000) { // Dodajemy limit bezpieczeństwa
-        // Sprawdź wydarzenia dla tego miesiąca
+    while (remainingPrincipal > 0.01 && i <= months + 1000) { // Add safety limit
+        // Check events for this month
         const monthEvents = events.filter(e => e.month === i);
         let eventDescriptions = [];
 
-        // Obsługa zmiany oprocentowania
+        // Handle interest rate change
         monthEvents.forEach(event => {
             if (event.type === 'rateChange') {
                 currentRate = event.newRate;
@@ -630,7 +630,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             }
         });
 
-        // Obsługa zmiany inflacji
+        // Handle inflation change
         monthEvents.forEach(event => {
             if (event.type === 'inflationChange') {
                 currentInflation = event.newInflation;
@@ -638,7 +638,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             }
         });
 
-        // Obsługa zmiany liczby rat
+        // Handle installment count change
         monthEvents.forEach(event => {
             if (event.type === 'periodChange') {
                 remainingMonths = event.newPeriod;
@@ -648,7 +648,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             }
         });
 
-        // Obsługa urlopu kredytowego
+        // Handle payment holiday
         monthEvents.forEach(event => {
             if (event.type === 'loanHoliday') {
                 isInHoliday = true;
@@ -657,26 +657,26 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             }
         });
 
-        // Obliczenie odsetek i kapitału
+        // Calculate interest and principal
         const currentMonthlyRate = currentRate / 100 / 12;
         const interestPayment = remainingPrincipal * currentMonthlyRate;
         let principalPayment = 0;
         let totalPayment = interestPayment;
 
-        // Podczas urlopu kredytowego płacimy tylko odsetki
+        // During payment holiday pay only interest
         if (isInHoliday) {
             principalPayment = 0;
             totalPayment = interestPayment;
             if (i === holidayEndMonth) {
                 isInHoliday = false;
                 eventDescriptions.push(trans.holidayEnd);
-                // Przelicz ratę po urlopie
+                // Recalculate installment after holiday
                 monthlyPayment = calculateMonthlyPayment(remainingPrincipal, currentMonthlyRate, remainingMonths);
             }
         } else {
             principalPayment = monthlyPayment - interestPayment;
 
-            // Korekta dla ostatniej raty
+            // Correction for last installment
             if (principalPayment > remainingPrincipal) {
                 principalPayment = remainingPrincipal;
                 monthlyPayment = principalPayment + interestPayment;
@@ -685,22 +685,22 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             totalPayment = principalPayment + interestPayment;
         }
 
-        // Obsługa nadpłat
+        // Handle overpayments
         let overpayment = 0;
-        let overpaymentStrategy = 'shortenPeriod'; // Domyślna strategia
+        let overpaymentStrategy = 'shortenPeriod'; // Default strategy
         let plannedOverpayment = 0;
         monthEvents.forEach(event => {
             if (event.type === 'overpayment') {
                 plannedOverpayment += event.amount;
-                overpaymentStrategy = event.strategy; // Pobieramy strategię z wydarzenia
+                overpaymentStrategy = event.strategy; // Get strategy from event
             }
         });
 
-        // Ograniczenie nadpłaty do pozostałego kapitału po spłacie raty
+        // Limit overpayment to remaining principal after installment payment
         const remainingAfterInstallment = remainingPrincipal - principalPayment;
         overpayment = Math.min(plannedOverpayment, Math.max(0, remainingAfterInstallment));
 
-        // Dodanie komunikatu o nadpłacie
+        // Add overpayment message
         if (overpayment > 0) {
             if (overpayment < plannedOverpayment) {
                 eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(plannedOverpayment)} PLN)`);
@@ -732,11 +732,11 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
             events: eventDescriptions
         });
 
-        // Przeliczenie raty jeśli była nadpłata
+        // Recalculate installment if there was overpayment
         if (overpayment > 0 && remainingPrincipal > 0 && !isInHoliday) {
             if (overpaymentStrategy === 'shortenPeriod') {
-                // Skrócenie okresu - rata pozostaje taka sama, zmniejsza się liczba rat
-                // Obliczamy ile rat zostało przy obecnej racie
+                // Shorten period - installment stays same, number of installments decreases
+                // Calculate how many installments remain at current installment
                 const currentMonthlyRate = currentRate / 100 / 12;
                 if (currentMonthlyRate > 0 && monthlyPayment > remainingPrincipal * currentMonthlyRate) {
                     remainingMonths = Math.ceil(
@@ -745,7 +745,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
                     );
                 }
             } else {
-                // Zmniejszenie raty - liczba rat pozostaje bez zmian
+                // Lower installment - number of installments remains unchanged
                 monthlyPayment = calculateMonthlyPayment(remainingPrincipal, currentMonthlyRate, remainingMonths);
             }
         }
@@ -756,7 +756,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
 
         i++;
 
-        // Zakończ jeśli kredyt spłacony
+        // Finish if loan paid off
         if (remainingPrincipal <= 0.01) {
             break;
         }
@@ -765,7 +765,7 @@ function calculateEqualInstallments(principal, annualRate, months, startYear, st
     return schedule;
 }
 
-// Kalkulacja rat malejących
+// Calculate decreasing installments
 function calculateDecreasingInstallments(principal, annualRate, months, startYear, startMonth, inflationRate) {
     const trans = translations[currentLanguage];
     const schedule = [];
@@ -778,12 +778,12 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
     let isInHoliday = false;
     let holidayEndMonth = 0;
 
-    while (remainingPrincipal > 0.01 && i <= months + 1000) { // Dodajemy limit bezpieczeństwa
-        // Sprawdź wydarzenia dla tego miesiąca
+    while (remainingPrincipal > 0.01 && i <= months + 1000) { // Add safety limit
+        // Check events for this month
         const monthEvents = events.filter(e => e.month === i);
         let eventDescriptions = [];
 
-        // Obsługa zmiany oprocentowania
+        // Handle interest rate change
         monthEvents.forEach(event => {
             if (event.type === 'rateChange') {
                 currentRate = event.newRate;
@@ -791,7 +791,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             }
         });
 
-        // Obsługa zmiany inflacji
+        // Handle inflation change
         monthEvents.forEach(event => {
             if (event.type === 'inflationChange') {
                 currentInflation = event.newInflation;
@@ -799,7 +799,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             }
         });
 
-        // Obsługa zmiany liczby rat
+        // Handle installment count change
         monthEvents.forEach(event => {
             if (event.type === 'periodChange') {
                 remainingMonths = event.newPeriod;
@@ -808,7 +808,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             }
         });
 
-        // Obsługa urlopu kredytowego
+        // Handle payment holiday
         monthEvents.forEach(event => {
             if (event.type === 'loanHoliday') {
                 isInHoliday = true;
@@ -817,44 +817,44 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             }
         });
 
-        // Obliczenie odsetek i kapitału
+        // Calculate interest and principal
         const currentMonthlyRate = currentRate / 100 / 12;
         const interestPayment = remainingPrincipal * currentMonthlyRate;
         let principalPayment = 0;
         let totalPayment = interestPayment;
 
-        // Podczas urlopu kredytowego płacimy tylko odsetki
+        // During payment holiday pay only interest
         if (isInHoliday) {
             principalPayment = 0;
             totalPayment = interestPayment;
             if (i === holidayEndMonth) {
                 isInHoliday = false;
                 eventDescriptions.push(trans.holidayEnd);
-                // Przelicz stałą część kapitałową po urlopie
+                // Recalculate constant principal part after holiday
                 constantPrincipal = remainingPrincipal / remainingMonths;
             }
         } else {
-            // Korekta stałej części kapitałowej
+            // Correct constant principal part
             principalPayment = Math.min(constantPrincipal, remainingPrincipal);
             totalPayment = principalPayment + interestPayment;
         }
 
-        // Obsługa nadpłat
+        // Handle overpayments
         let overpayment = 0;
-        let overpaymentStrategy = 'shortenPeriod'; // Domyślna strategia
+        let overpaymentStrategy = 'shortenPeriod'; // Default strategy
         let plannedOverpayment = 0;
         monthEvents.forEach(event => {
             if (event.type === 'overpayment') {
                 plannedOverpayment += event.amount;
-                overpaymentStrategy = event.strategy; // Pobieramy strategię z wydarzenia
+                overpaymentStrategy = event.strategy; // Get strategy from event
             }
         });
 
-        // Ograniczenie nadpłaty do pozostałego kapitału po spłacie raty
+        // Limit overpayment to remaining principal after installment payment
         const remainingAfterInstallment = remainingPrincipal - principalPayment;
         overpayment = Math.min(plannedOverpayment, Math.max(0, remainingAfterInstallment));
 
-        // Dodanie komunikatu o nadpłacie
+        // Add overpayment message
         if (overpayment > 0) {
             if (overpayment < plannedOverpayment) {
                 eventDescriptions.push(`${trans.overpaymentLabel} ${formatNumber(overpayment)} PLN (${trans.planLabel}: ${formatNumber(plannedOverpayment)} PLN)`);
@@ -886,15 +886,15 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
             events: eventDescriptions
         });
 
-        // Przeliczenie stałej części kapitałowej po nadpłacie
+        // Recalculate constant principal part after overpayment
         if (overpayment > 0 && remainingPrincipal > 0 && !isInHoliday) {
             if (overpaymentStrategy === 'shortenPeriod') {
-                // Skrócenie okresu - część kapitałowa rośnie
-                // Obliczamy nową liczbę rat zakładając że część kapitałowa pozostaje bez zmian
+                // Shorten period - principal part grows
+                // Calculate new number of installments assuming principal part remains unchanged
                 const estimatedMonths = Math.ceil(remainingPrincipal / constantPrincipal);
                 remainingMonths = estimatedMonths;
             } else {
-                // Zmniejszenie części kapitałowej - liczba rat pozostaje bez zmian
+                // Decrease principal part - number of installments remains unchanged
                 constantPrincipal = remainingPrincipal / remainingMonths;
             }
         }
@@ -905,7 +905,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
 
         i++;
 
-        // Zakończ jeśli kredyt spłacony
+        // Finish if loan paid off
         if (remainingPrincipal <= 0.01) {
             break;
         }
@@ -914,7 +914,7 @@ function calculateDecreasingInstallments(principal, annualRate, months, startYea
     return schedule;
 }
 
-// Pomocnicza funkcja do obliczenia raty dla rat równych
+// Helper function to calculate installment for equal installments
 function calculateMonthlyPayment(principal, monthlyRate, months) {
     if (monthlyRate === 0) {
         return principal / months;
@@ -923,19 +923,19 @@ function calculateMonthlyPayment(principal, monthlyRate, months) {
            (Math.pow(1 + monthlyRate, months) - 1);
 }
 
-// Wyświetlenie wyników
+// Display results
 function displayResults(schedule) {
-    // Obliczenie sum
+    // Calculate sums
     const totalPayment = schedule.reduce((sum, row) => sum + row.payment + row.overpayment, 0);
     const totalInterest = schedule.reduce((sum, row) => sum + row.interest, 0);
     const totalPrincipal = schedule.reduce((sum, row) => sum + row.principal + row.overpayment, 0);
 
-    // Podsumowanie
+    // Summary
     document.getElementById('totalAmount').textContent = formatNumber(totalPayment) + ' PLN';
     document.getElementById('totalInterest').textContent = formatNumber(totalInterest) + ' PLN';
     document.getElementById('totalPrincipal').textContent = formatNumber(totalPrincipal) + ' PLN';
 
-    // Liczba rat z latami i miesiącami
+    // Installment count with years and months
     const totalMonths = schedule.length;
     const years = Math.floor(totalMonths / 12);
     const months = totalMonths % 12;
@@ -949,7 +949,7 @@ function displayResults(schedule) {
     }
     document.getElementById('installmentCount').textContent = installmentText;
 
-    // Tabela
+    // Table
     const tbody = document.getElementById('resultsTableBody');
     tbody.innerHTML = '';
 
@@ -959,7 +959,7 @@ function displayResults(schedule) {
             tr.classList.add('event-highlight');
         }
 
-        // Oblicz lata i miesiące dla numeru raty
+        // Calculate years and months for installment number
         const rowYears = Math.floor(row.month / 12);
         const rowMonths = row.month % 12;
         let monthText = row.month.toString();
@@ -984,33 +984,33 @@ function displayResults(schedule) {
         tbody.appendChild(tr);
     });
 
-    // Pokaż sekcje wyników
+    // Show results sections
     document.getElementById('summarySection').style.display = 'block';
     document.getElementById('resultsSection').style.display = 'block';
 
-    // Scroll do wyników
+    // Scroll to results
     document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Formatowanie liczb
+// Number formatting
 function formatNumber(num) {
     return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-// ==================== FUNKCJE LOCALSTORAGE ====================
+// ==================== LOCALSTORAGE FUNCTIONS ====================
 
-// Pobierz wszystkie symulacje z localStorage
+// Get all simulations from localStorage
 function getSimulations() {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
 }
 
-// Zapisz symulacje do localStorage
+// Save simulations to localStorage
 function saveSimulations(simulations) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(simulations));
 }
 
-// Pobierz dane formularza
+// Get form data
 function getFormData() {
     return {
         loanAmount: parseFloat(document.getElementById('loanAmount').value),
@@ -1023,7 +1023,7 @@ function getFormData() {
     };
 }
 
-// Ustaw dane formularza
+// Set form data
 function setFormData(data) {
     document.getElementById('loanAmount').value = data.loanAmount;
     document.getElementById('interestRate').value = data.interestRate;
@@ -1035,13 +1035,13 @@ function setFormData(data) {
     renderEvents();
 }
 
-// Pokaż modal zapisu
+// Show save modal
 function showSaveModal() {
     document.getElementById('simulationName').value = '';
     saveModal.show();
 }
 
-// Zapisz symulację
+// Save simulation
 function saveSimulation() {
     const trans = translations[currentLanguage];
     const name = document.getElementById('simulationName').value.trim();
@@ -1066,13 +1066,13 @@ function saveSimulation() {
     alert(trans.simulationSaved);
 }
 
-// Pokaż modal wczytywania
+// Show load modal
 function showLoadModal() {
     renderSimulationsList();
     loadModal.show();
 }
 
-// Renderuj listę symulacji
+// Render simulations list
 function renderSimulationsList() {
     const trans = translations[currentLanguage];
     const simulations = getSimulations();
@@ -1125,7 +1125,7 @@ function renderSimulationsList() {
     container.innerHTML = html;
 }
 
-// Wczytaj symulację
+// Load simulation
 function loadSimulation(id) {
     const simulations = getSimulations();
     const simulation = simulations.find(s => s.id === id);
@@ -1136,7 +1136,7 @@ function loadSimulation(id) {
     }
 }
 
-// Usuń symulację
+// Delete simulation
 function deleteSimulation(id) {
     const trans = translations[currentLanguage];
     if (!confirm(trans.confirmDelete)) {
@@ -1149,7 +1149,7 @@ function deleteSimulation(id) {
     renderSimulationsList();
 }
 
-// Wyczyść formularz
+// Clear form
 function clearSimulation() {
     const trans = translations[currentLanguage];
     if (!confirm(trans.confirmClear)) {
@@ -1169,7 +1169,7 @@ function clearSimulation() {
     events = [];
     renderEvents();
 
-    // Ukryj wyniki
+    // Hide results
     document.getElementById('summarySection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'none';
 }
